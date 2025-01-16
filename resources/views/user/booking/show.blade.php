@@ -1,22 +1,33 @@
-{{-- resources/views/user/bookings/show.blade.php --}}
 @extends('layouts.app')
 
 @section('content')
-    <h1>Your Bookings</h1>
-
+<div class="container mt-4">
+    <h1>My Bookings</h1>
     @if($bookings->isEmpty())
-        <p>You have no bookings. <a href="{{ route('user.bookings.create') }}">Create a new booking.</a></p>
+        <p>No bookings found.</p>
     @else
-        <ul>
-            @foreach ($bookings as $booking)
-                <li>
-                    <strong>Service ID:</strong> {{ $booking->service_id }}<br>
-                    <strong>Barber ID:</strong> {{ $booking->barber_id }}<br>
-                    <strong>Appointment Time:</strong> {{ $booking->appointment_time }}<br>
-                    <strong>Status:</strong> {{ $booking->status }}<br>
-                    <a href="{{ route('booking.details', $booking->id) }}">View Details</a>
-                </li>
-            @endforeach
-        </ul>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Service</th>
+                    <th>Barber</th>
+                    <th>Appointment Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($bookings as $booking)
+                    <tr>
+                        <td>{{ $booking->id }}</td>
+                        <td>{{ $booking->service->name }}</td>
+                        <td>{{ $booking->barber->name }}</td>
+                        <td>{{ $booking->appointment_time }}</td>
+                        <td>{{ $booking->status }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     @endif
+</div>
 @endsection

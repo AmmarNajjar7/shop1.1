@@ -14,6 +14,13 @@ class ServiceController extends Controller
         return view('admin.services.index', compact('services'));
     }
     
+
+    //services for user  only  read  services
+    public function indexUser()
+    {   
+        $services = Service::all();
+        return view('user.services.services', compact('services')); 
+    }
     public function create()
     {
         return view('admin.services.create');

@@ -19,81 +19,83 @@ class BookingController extends Controller
     }   
 
     public function index()
-    {
-        if ($this->isAdmin()) {
-            // Admin logic
-            $bookings = Booking::all();
-            return view('admin.bookings.index', compact('bookings'));
-        } else {
-            // Regular user logic
-            $bookings = Booking::where('customer_email', Auth::user()->email)->get();
-            return view('user.bookings.index', compact('bookings'));
-        }
+{
+    if ($this->isAdmin()) {
+        // Admin logic: Fetch all bookings
+        $bookings = Booking::with(['user', 'service', 'barber'])->get(); // Eager loading for relationships
+        return view('admin.bookings.index', compact('bookings'));
+    } else {
+        // Regular user logic: Fetch bookings for the authenticated user
+        $bookings = Booking::with(['service', 'barber'])
+            ->where('user_id', Auth::id()) // Fetch by the logged-in user's ID
+            ->get();
+
+        return view('user.booking.index', compact('bookings'));
     }
+}
+
     
-    public function create()
-    {
-        if ($this->isAdmin()) {
-            return redirect()->route('admin.bookings.create'); // Redirect admin to the admin create booking view
-        }
-
-        // Check if the user is authenticated
-        if (!Auth::check()) {
-            return redirect()->route('login')->with('message', 'You need to log in or register to make a booking.');
-        }
-
-        // Fetch available services and barbers for the booking form
-        $services = Service::all();
-        $barbers = Barber::all();
-
-        // Show the user a form to create a booking
-        return view('user.bookings.create', compact('services', 'barbers'));
+public function create()
+{
+    // Check if the user is authenticated
+    if (!Auth::check()) {
+        return redirect()->route('login')->with('message', 'You need to log in or register to make a booking.');
     }
+
+    // Fetch available services and barbers for the booking form
+    $services = Service::all();
+    $barbers = Barber::all();
+
+    // Check if the user is an admin
+    if ($this->isAdmin()) {
+        return view('admin.bookings.create', compact('services', 'barbers'));
+    }
+
+    // Show the user a form to create a booking
+    return view('user.booking.create', compact('services', 'barbers'));
+}
+
 
     public function store(Request $request)
     {
-        if ($this->isAdmin()) {
-            return redirect()->route('admin.bookings.index'); // Redirect admin to the bookings index
-        }
-
         $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'customer_email' => 'required|email',
             'service_id' => 'required|exists:services,id',
             'barber_id' => 'required|exists:barbers,id',
-            'date' => 'required|date',
-            'time' => 'required|string',
+            'appointment_time' => 'required|date|after_or_equal:now', // Ensure the combined date-time field is valid
         ]);
-
-        // Create the booking for the authenticated user
+    
         Booking::create([
-            'customer_name' => $request->customer_name,
-            'customer_email' => $request->customer_email,
+            'user_id' => Auth::id(),
             'service_id' => $request->service_id,
             'barber_id' => $request->barber_id,
-            'date' => $request->date,
-            'time' => $request->time,
+            'appointment_time' => $request->appointment_time, // Save the full datetime
             'status' => 'pending', // Default status
         ]);
-
-        return redirect()->route('user.bookings.index')->with('success', 'Booking created successfully.');
-    }
-    public function show() // No parameters
-    {
-        // Check if the user is an admin
-        if ($this->isAdmin()) {
-            // Admin can see all bookings
-            $bookings = Booking::all(); // Fetch all bookings for admin
-            return view('admin.bookings.index', compact('bookings')); // Adjust the view as needed
-        }
     
-        // Regular user logic
-        // Find all bookings for the authenticated user by their email
-        $bookings = Booking::where('user_id', Auth::user()->email)->get();
-        
-        // Ensure that the bookings exist for this user
-        return view('user.booking.show', compact('bookings')); // Adjust the view as needed
+        return redirect()->route('bookings.index')->with('success', 'Booking created successfully.');
     }
+    
+
+
+   public function show()
+{
+    // Check if the user is an admin
+    if ($this->isAdmin()) {
+        // Admin can see all bookings
+        $bookings = Booking::with(['user', 'service', 'barber'])->get(); // Use eager loading for related models
+        return view('admin.bookings.index', compact('bookings'));
+    }
+
+    // Regular user logic
+    // Find all bookings for the authenticated user by their ID
+    $bookings = Booking::with(['service', 'barber'])
+        ->where('user_id', Auth::id()) // Assuming `user_id` references the logged-in user's ID
+        ->get();
+
+    // Ensure that the bookings exist for this user
+    return view('user.booking.show', compact('bookings'));
+}
+
     
 
     public function edit(Booking $booking)
@@ -120,12 +122,21 @@ class BookingController extends Controller
     }
 
     public function destroy(Booking $booking)
-    {
-        if (!$this->isAdmin()) {
-            return redirect()->route('user.bookings.index'); // Regular users cannot delete bookings
-        }
-
+{
+    // Check if the user is an admin
+    if ($this->isAdmin()) {
         $booking->delete();
         return redirect()->route('admin.bookings.index')->with('success', 'Booking canceled successfully.');
     }
+
+    // Regular user logic: Check if the booking belongs to the authenticated user
+    if ($booking->user_id === Auth::id()) {
+        $booking->delete();
+        return redirect()->route('bookings.index')->with('success', 'Your booking has been canceled successfully.');
+    }
+
+    // Unauthorized access
+    return redirect()->route('bookings.index')->with('error', 'You are not authorized to cancel this booking.');
+}
+
 }

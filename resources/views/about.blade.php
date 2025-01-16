@@ -9,6 +9,6 @@
         <h2>Our Mission</h2>
         <p>Our mission is to deliver exceptional grooming experiences that leave our customers looking and feeling their best.</p>
         <h2>Contact Information</h2>
-        <p>If you have any questions or want to know more about our services, feel free to <a href="{{ route('contact') }}">contact us</a>.</p>
+        <p>If you have any questions or want to know more about our services, feel free to <a href="{{ route('contact.index') }}">contact us</a>.</p>
     </div>
 @endsection

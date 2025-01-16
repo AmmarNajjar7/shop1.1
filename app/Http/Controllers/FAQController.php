@@ -36,10 +36,12 @@ class FAQController extends Controller
 
     // FAQ's voor gebruiker
     public function userIndex()
-    {
-        $faqs = FAQ::where( auth()->id())->get(); // Alleen eigen FAQ's tonen
-        return view('faqs.user. index', compact('faqs'));
-    }
+{
+    // Retrieve FAQs where the user_id matches the authenticated user's ID
+    $faqs = FAQ::where('user_id', auth()->id())->get();
+
+    return view('faqs.user.index', compact('faqs'));
+}
 
     // Admin kan alle FAQ's beheren
     public function adminIndex()
@@ -54,7 +56,7 @@ class FAQController extends Controller
 
         $categories = FAQCategory::all(); // Fetch all categories
 
-        return view('faqs.admin.create', compact('categories'));
+        return view('faqs.user.create', compact('categories'));
     }
 
     // Opslaan van een nieuwe FAQ

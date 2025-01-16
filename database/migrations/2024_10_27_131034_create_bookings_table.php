@@ -15,13 +15,15 @@ return new class extends Migration
     {
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade'); // Assuming users can book
-            $table->foreignId('service_id')->constrained()->onDelete('cascade');
-            $table->foreignId('barber_id')->constrained()->onDelete('cascade');
-            $table->dateTime('appointment_time');
-            $table->string('status')->default('pending'); // pending, confirmed, cancelled
+            $table->unsignedBigInteger('user_id'); // Foreign key for user
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->unsignedBigInteger('service_id');
+            $table->unsignedBigInteger('barber_id');
+            $table->timestamp('appointment_time');
+            $table->string('status')->default('pending');
             $table->timestamps();
         });
+        
         
     }
 

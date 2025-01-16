@@ -32,6 +32,7 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+
 Route::middleware(['guest'])->group(function () {
 
 // Login Route
@@ -51,29 +52,32 @@ Route::get('/logout', function () {
 });
 
 // Guest routes
-Route::get('/services', [ServiceController::class, 'index'])->name('services.index');
+
+Route::get('/services', [ServiceController::class, 'indexuser'])->name('services.index');
 Route::get('/barbers', [BarberController::class, 'index'])->name('barbers.index');
 Route::get('/faqs', [FAQController::class, 'publicIndex'])->name('faqs.public'); // Bekijk openbare FAQ's
 Route::get('/faqs/{id}', [FAQController::class, 'getFAQsByCategory']);
 Route::get('news', [NewsController::class, 'index'])->name('news.index');
+//route conect
 Route::get('contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('contact', [ContactController::class, 'store'])->name('contact.store');
+Route::get('/barbers', [BarberController::class, 'index'])->name('barbers.index');
+
+
 
 // routes/web.php
 Route::get('/about',function(){
     return view('about');
 })->name('about');
-Route::get('/contact',function(){
-    return view('contact');
-})->name('contact');
+
 
 });
 
-Route::middleware('auth')->group(function () {
-        Route::get('user/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::put('user/profile', [ProfileController::class, 'update'])->name('profile.update');
-        Route::get('user/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
 
+Route::middleware('auth')->group(function () {
+    Route::get('user/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::put('user/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('user/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/booking/{service}', [BookingController::class, 'create'])->name('booking.create');
     // Gebruiker kan eigen FAQ's beheren
@@ -84,36 +88,29 @@ Route::middleware('auth')->group(function () {
     Route::put('/user/faqs/{faq}', [FAQController::class, 'update'])->name('user.faqs.update'); // Bijwerken FAQ
     Route::delete('/user/faqs/{faq}', [FAQController::class, 'destroy'])->name('user.faqs.destroy'); // Verwijderen FAQ
     Route::get('user/news', [NewsController::class, 'index'])->name('news.index');
-
-
 });
-
 
 Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/dashboard', [UserController::class, 'index'])->name('user.dashboard');
-    Route::get('/user/services', [UserController::class, 'services'])->name('user.services'); // View services
-    Route::get('/user/bookings', [UserController::class, 'bookings'])->name('user.bookings'); // User's bookings
-    //views the appointment for the current user
-    Route::get('user/booking/show', [BookingController::class, 'show'])->name('user.booking.show');
-    Route::get('/booking/{id}', [BookingController::class, 'show'])->name('booking.show');
-    //views the form to create a new appointment for the current user                                                                                                                               
-    Route::get('/user/bookings/create', [UserController::class, 'createBooking'])->name('user.booking.create'); // Create booking
-    //stores the new appointment for the current user
-    Route::post('/user/bookings/store', [UserController::class, 'storeBooking'])->name('user.bookings.store'); // Store booking
-    //views the form to edit the current appointment for the current user
-    Route::get('/user/bookings/{id}/edit', [UserController::class, 'editBooking'])->name('user.bookings.edit'); // Edit booking
-    //updates the current appointment for the current user
-    Route::put('/user/bookings/{id}', [UserController::class, 'updateBooking'])->name('user.bookings.update');
-    Route::get('/user/bookings/create', [UserController::class, 'createBooking'])->name('user.bookings.create'); // Create booking
-    Route::post('/user/bookings/store', [UserController::class, 'storeBooking'])->name('user.bookings.store'); // Store booking
-    Route::get('/user/bookings/{id}/edit', [UserController::class, 'editBooking'])->name('user.bookings.edit'); // Edit booking
-    Route::put('/user/bookings/{id}', [UserController::class, 'updateBooking'])->name('user.bookings.update'); // Update booking
-    Route::delete('/user/bookings/{id}', [UserController::class, 'destroyBooking'])->name('user.bookings.destroy'); // Delete booking
-    //comments user
+    Route::get('/user/services', [ServiceController::class, 'indexuser'])->name('user.services.index'); // View services
+    Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
+    Route::get('/bookings/create', [BookingController::class, 'create'])->name('bookings.create');
+    Route::post('/bookings', [BookingController::class, 'store'])->name('bookings.store');
+    Route::get('/bookings/{id}', [BookingController::class, 'show'])->name('bookings.show');
+    Route::get('/bookings/{booking}/edit', [BookingController::class, 'edit'])->name('bookings.edit');
+    Route::put('/bookings/{booking}', [BookingController::class, 'update'])->name('bookings.update');
+    Route::delete('/bookings/{booking}', [BookingController::class, 'destroy'])->name('bookings.destroy');
+    //comments user/ Bookings/comments
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+    //barbers for user 
+    Route::get('/barbers/{barber}', [BarberController::class,'show'])->name('barbers.show');
+    Route::get('/user/barbers/{barber}/bookings', [BarberController::class, 'bookings'])->name('barbers.bookings');
+    Route::get('/user/barbers/{barber}/bookings/{booking}', [BarberController::class, 'bookingShow'])->name('barbers.booking.show');
+    Route::get('/user/barbers/{barber}/bookings/{booking}/edit', [BarberController::class, 'bookingEdit'])->name('barbers.booking.edit');
+    Route::put('/user/barbers/{barber}/bookings/{booking}', [BarberController::class, 'bookingUpdate'])->name('barbers.booking.update');
 
 }); 
 
@@ -176,8 +173,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/news/{news}/edit', [AdminNewsController::class, 'edit'])->name('admin.news.edit');
     Route::delete('admin/news/{news}', [AdminNewsController::class, 'destroy'])->name('admin.news.destroy');
     Route::put('admin/news/{news}', [AdminNewsController::class, 'update'])->name('admin.news.update');
-
-
 
 
 });

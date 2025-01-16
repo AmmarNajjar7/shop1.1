@@ -2,10 +2,7 @@
 
 @section('content')
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Manage News</h1>
-        <a href="{{ route('admin.news.create') }}" class="btn btn-primary">Add News</a>
-    </div>
+    
 
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">

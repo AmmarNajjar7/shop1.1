@@ -31,7 +31,7 @@ class BarberController extends Controller
       {
         $services = Service::all();
         $barbers = Barber::all(); 
-        return view('admin.bookings.create', compact('services', 'barbers'));
+        return view('admin.barbers.create', compact('services', 'barbers'));
 
       }
   

@@ -1,31 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container mt-4">
     <h1>Edit Booking</h1>
 
-    <form method="POST" action="{{ route('user.bookings.update', $booking->id) }}">
+    <form action="{{ route('bookings.update', $booking->id) }}" method="POST">
         @csrf
         @method('PUT')
-        <div>
-            <label for="service_id">Service</label>
-            <select name="service_id" id="service_id" required>
-                @foreach($services as $service)
-                    <option value="{{ $service->id }}" {{ $service->id == $booking->service_id ? 'selected' : '' }}>{{ $service->name }}</option>
-                @endforeach
+
+        <div class="mb-3">
+            <label for="status" class="form-label">Status</label>
+            <select name="status" id="status" class="form-select" required>
+                <option value="pending" {{ $booking->status === 'pending' ? 'selected' : '' }}>Pending</option>
+                <option value="confirmed" {{ $booking->status === 'confirmed' ? 'selected' : '' }}>Confirmed</option>
+                <option value="canceled" {{ $booking->status === 'canceled' ? 'selected' : '' }}>Canceled</option>
             </select>
         </div>
-        <div>
-            <label for="barber_id">Barber</label>
-            <select name="barber_id" id="barber_id" required>
-                @foreach($barbers as $barber)
-                    <option value="{{ $barber->id }}" {{ $barber->id == $booking->barber_id ? 'selected' : '' }}>{{ $barber->name }}</option>
-                @endforeach
-            </select>
-        </div>
-        <div>
-            <label for="appointment_time">Appointment Time</label>
-            <input type="datetime-local" name="appointment_time" value="{{ date('Y-m-d\TH:i', strtotime($booking->appointment_time)) }}" required>
-        </div>
-        <button type="submit">Update Booking</button>
+
+        <button type="submit" class="btn btn-success">Update Booking</button>
     </form>
+</div>
 @endsection
