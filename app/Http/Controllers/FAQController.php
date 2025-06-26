@@ -19,7 +19,7 @@ class FAQController extends Controller
         ? Comment::where('user_id', auth()->id())->with('faq')->get()
         : [];
 
-    return view('faqs.public', compact('faqs','categories', 'userComments'));
+    return view('faqs.public', compact('faqs','categories'));
 }
 
     
@@ -39,8 +39,10 @@ class FAQController extends Controller
 {
     // Retrieve FAQs where the user_id matches the authenticated user's ID
     $faqs = FAQ::where('user_id', auth()->id())->get();
+        $categories = FAQCategory::all();
 
-    return view('faqs.user.index', compact('faqs'));
+
+    return view('faqs.user.index', compact('faqs','categories'));
 }
 
     // Admin kan alle FAQ's beheren

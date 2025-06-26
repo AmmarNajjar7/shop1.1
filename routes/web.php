@@ -15,6 +15,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NewsController;
 use App\Http\Controllers\Admin\NewsController as AdminNewsController;
+use App\Http\Controllers\AboutController;
 
 
 /*
@@ -61,20 +62,17 @@ Route::get('news', [NewsController::class, 'index'])->name('news.index');
 //route conect
 Route::get('contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('contact', [ContactController::class, 'store'])->name('contact.store');
-Route::get('/barbers', [BarberController::class, 'index'])->name('barbers.index');
 
 
 
 // routes/web.php
-Route::get('/about',function(){
-    return view('about');
-})->name('about');
 
 
 });
 
 
 Route::middleware('auth')->group(function () {
+
     Route::get('user/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('user/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('user/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
@@ -90,7 +88,9 @@ Route::middleware('auth')->group(function () {
     Route::get('user/news', [NewsController::class, 'index'])->name('news.index');
 });
 
-Route::middleware(['auth', 'user'])->group(function () {
+    Route::middleware(['auth', 'user'])->group(function () {
+
+    
     Route::get('/dashboard', [UserController::class, 'index'])->name('user.dashboard');
     Route::get('/user/services', [ServiceController::class, 'indexuser'])->name('user.services.index'); // View services
     Route::get('/bookings', [BookingController::class, 'index'])->name('bookings.index');
@@ -106,6 +106,7 @@ Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/comments/{comment}/edit', [CommentController::class, 'edit'])->name('comments.edit');
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
     //barbers for user 
+    Route::get('/barbers', [BarberController::class, 'index'])->name('barbers.index');
     Route::get('/barbers/{barber}', [BarberController::class,'show'])->name('barbers.show');
     Route::get('/user/barbers/{barber}/bookings', [BarberController::class, 'bookings'])->name('barbers.bookings');
     Route::get('/user/barbers/{barber}/bookings/{booking}', [BarberController::class, 'bookingShow'])->name('barbers.booking.show');
@@ -114,9 +115,18 @@ Route::middleware(['auth', 'user'])->group(function () {
 
 }); 
 
+
+Route::get('/dashboard', function () {
+    return auth()->user()->isAdmin()
+        ? redirect()->route('admin.dashboard')
+        : view('user.dashboard');
+})->middleware('auth')->name('dashboard');
+
+
 // Admin routes
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', [AdminController::class, 'index'])->name('admin.dashboard');
+    
     // Service routes
     Route::get('admin/services', [ServiceController::class, 'index'])->name('admin.services.index');
     Route::get('admin/services/create', [ServiceController::class, 'create'])->name('admin.services.create');

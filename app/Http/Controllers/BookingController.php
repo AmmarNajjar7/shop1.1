@@ -18,21 +18,25 @@ class BookingController extends Controller
         return Auth::check() && Auth::user()->role === 'admin';
     }   
 
-    public function index()
+public function index()
 {
-    if ($this->isAdmin()) {
-        // Admin logic: Fetch all bookings
-        $bookings = Booking::with(['user', 'service', 'barber'])->get(); // Eager loading for relationships
-        return view('admin.bookings.index', compact('bookings'));
-    } else {
-        // Regular user logic: Fetch bookings for the authenticated user
-        $bookings = Booking::with(['service', 'barber'])
-            ->where('user_id', Auth::id()) // Fetch by the logged-in user's ID
+   if ($this->isAdmin()) {
+        // Get ALL bookings without any filtering
+        $bookings = Booking::with(['user', 'service', 'barber'])
+            ->orderBy('created_at', 'desc')
             ->get();
-
-        return view('user.booking.index', compact('bookings'));
+        
+        return view('admin.bookings.index', compact('bookings'));
     }
+
+    $bookings = Booking::with(['service', 'barber'])
+        ->where('user_id', Auth::id())
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    return view('user.booking.index', compact('bookings'));
 }
+
 
     
 public function create()

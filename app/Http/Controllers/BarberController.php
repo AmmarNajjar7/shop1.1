@@ -22,7 +22,7 @@ class BarberController extends Controller
           return view('admin.barbers.index', compact('barbers'));
         } else {
             $barbers = Barber::all();
-            return view('barbers', compact('barbers'));
+            return view('user.barbers', compact('barbers'));
             }
       }
   

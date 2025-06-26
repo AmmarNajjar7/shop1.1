@@ -1,0 +1,212 @@
+/* Fixed Logout Button CSS */
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: #f8f9fa;
+}
+
+/* Container */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Header & Navigation */
+header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav {
+    padding: 0.75rem 0;
+}
+
+/* Navigation List */
+nav ul {
+    list-style: none;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 0;
+    padding: 0;
+}
+
+nav li {
+    margin: 0;
+    display: inline-block;
+}
+
+/* Navigation Links */
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.6rem 1rem;
+    border-radius: 0.4rem;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+nav a:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+nav a.active {
+    background: rgba(255, 255, 255, 0.25);
+}
+
+/* FIXED: Logout Button Styling */
+nav form {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+}
+
+nav button[type="submit"] {
+    background: #dc3545 !important;
+    color: white !important;
+    border: none !important;
+    padding: 0.6rem 1rem !important;
+    border-radius: 0.4rem !important;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem !important;
+    white-space: nowrap;
+    font-family: inherit !important;
+    box-shadow: none !important;
+    outline: none !important;
+    margin: 0 !important;
+}
+
+nav button[type="submit"]:hover {
+    background: #c82333 !important;
+    transform: translateY(-1px);
+    box-shadow: none !important;
+}
+
+nav button[type="submit"]:focus {
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3) !important;
+}
+
+nav button[type="submit"]:active {
+    transform: translateY(0) !important;
+    background: #a71e2a !important;
+}
+
+/* Remove any dark background or containers around logout */
+nav li:last-child {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+}
+
+/* Main Content */
+main {
+    min-height: calc(100vh - 120px);
+    padding: 2rem 0;
+}
+
+/* Footer */
+footer {
+    background: #343a40;
+    color: white;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: auto;
+}
+
+footer p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Mobile Navigation */
+@media (max-width: 600px) {
+    nav ul {
+        flex-direction: column !important;
+        gap: 0.5rem;
+        align-items: stretch;
+    }
+    
+    nav a {
+        text-align: center;
+        width: 100%;
+        padding: 0.75rem;
+    }
+    
+    nav button[type="submit"] {
+        width: 100% !important;
+        padding: 0.75rem !important;
+        margin-top: 0.5rem !important;
+        text-align: center;
+    }
+    
+    main {
+        padding: 1rem 0;
+    }
+}
+
+/* For medium screens */
+@media (min-width: 601px) and (max-width: 1024px) {
+    nav ul {
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+    
+    nav a,
+    nav button[type="submit"] {
+        font-size: 0.85rem !important;
+        padding: 0.5rem 0.8rem !important;
+    }
+}
+
+/* Override any conflicting styles */
+nav ul li {
+    float: none !important;
+    clear: none !important;
+    width: auto !important;
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+/* Make sure navigation stays horizontal on larger screens */
+@media (min-width: 769px) {
+    nav ul {
+        flex-direction: row !important;
+        justify-content: center;
+        align-items: center;
+    }
+    
+    nav li {
+        display: inline-block !important;
+    }
+}

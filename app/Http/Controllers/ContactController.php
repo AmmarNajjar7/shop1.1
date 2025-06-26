@@ -35,7 +35,7 @@ class ContactController extends Controller
         Mail::to('ammarnajjar00@gmail.com')->send(new ContactFormEmail($contact));
 
         // Redirect back with success message
-        return redirect()->back('user.emails.contact')->with('success', 'Your message has been sent successfully!');
+        return redirect()->back()->with('success', 'Your message has been sent successfully!');
     }
 
 }

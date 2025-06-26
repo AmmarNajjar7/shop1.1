@@ -1,5 +1,9 @@
 @extends('layouts.admin')
 
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/services-management.css') }}">
+@endpush
+
 @section('content')
 <div class="container mt-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -34,11 +38,11 @@
         <tbody>
             @foreach($services as $service)
                 <tr>
-                    <td>{{ $service->id }}</td>
-                    <td>{{ $service->name }}</td>
-                    <td>{{ $service->description }}</td>
-                    <td>${{ number_format($service->price, 2) }}</td>
-                    <td>
+                    <td data-label="#">{{ $service->id }}</td>
+                    <td data-label="Name">{{ $service->name }}</td>
+                    <td data-label="Description">{{ $service->description }}</td>
+                    <td data-label="Price">${{ number_format($service->price, 2) }}</td>
+                    <td data-label="Actions">
                         <a href="{{ route('admin.services.edit', $service->id) }}" class="btn btn-secondary btn-sm">Edit</a>
                         <form method="POST" action="{{ route('admin.services.destroy', $service->id) }}" style="display:inline;">
                             @csrf

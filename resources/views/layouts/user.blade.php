@@ -15,10 +15,7 @@
             <div class="container">
                 <h1>Your App Name</h1>
                 <ul>
-                    <li><a href="{{ route('home') }}">Home</a></li>
-                    <li><a href="{{ route('appointments.index') }}">Appointments</a></li>
-                    <li><a href="{{ route('profile') }}">Profile</a></li>
-                    <li>
+                    
                         <form action="{{ route('logout') }}" method="POST">
                             @csrf
                             <button type="submit">Logout</button>

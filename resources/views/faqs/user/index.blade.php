@@ -1,53 +1,145 @@
 @extends('layouts.app')
 
-@section('title', 'My FAQs')
+@push('styles')
+<link rel="stylesheet" href="{{ asset('css/faq-styles.css') }}">
+@endpush
 
 @section('content')
-<div class="container">
-    <h1 class="my-4">My FAQs</h1>
+<div class="container faq-container">
+    <h1 class="faq-title">Veelgestelde Vragen</h1>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
-
-    @if($faqs->isEmpty())
-        <div class="alert alert-info">
-            You haven't added any FAQs yet.
-        </div>
-    @else
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Category</th>
-                    <th>Question</th>
-                    <th>Answer</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($faqs as $faq)
-                    <tr>
-                        <td>{{ $loop->iteration }}</td>
-                        <td>{{ $faq->category->name ?? 'Uncategorized' }}</td>
-                        <td>{{ $faq->question }}</td>
-                        <td>{{ Str::limit($faq->answer, 50) }}</td>
-                        <td>
-                            <a href="{{ route('user.faqs.edit', $faq->id) }}" class="btn btn-primary btn-sm">Edit</a>
-                            <form action="{{ route('user.faqs.destroy', $faq->id) }}" method="POST" class="d-inline">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this FAQ?')">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
+    <div class="faq-wrapper">
+        <!-- Sidebar for Categories -->
+        <aside class="faq-categories">
+            <h3>Categorieën</h3>
+            <ul id="faq-categories">
+                <li>
+                    <a href="#all-faqs" class="category-link active" data-category="all">
+                        Alle FAQs
+                    </a>
+                </li>
+                @foreach($categories as $category)
+                    <li>
+                        <a href="#category-{{ $category->id }}" class="category-link" data-category="{{ $category->id }}">
+                            {{ $category->name }}
+                            <span class="faq-count">({{ $category->faqs_count ?? $category->faqs->count() }})</span>
+                        </a>
+                    </li>
                 @endforeach
-            </tbody>
-        </table>
-    @endif
+            </ul>
+        </aside>
 
-    <a href="{{ route('user.faqs.create') }}" class="btn btn-success">Add New FAQ</a>
+        <!-- FAQ Content -->
+        <div class="faq-content">
+            <!-- All FAQs Section -->
+            <div id="all-faqs" class="category-section active">
+                <h2>Alle Veelgestelde Vragen</h2>
+                <p class="category-description">Hier vind je alle FAQs overzichtelijk gegroepeerd per categorie.</p>
+                
+                @foreach($categories as $category)
+                    @if($category->faqs->count() > 0)
+                        <div class="category-group">
+                            <h3 class="category-group-title">
+                                <i class="category-icon">📂</i>
+                                {{ $category->name }}
+                                <span class="category-badge">{{ $category->faqs->count() }} {{ $category->faqs->count() == 1 ? 'vraag' : 'vragen' }}</span>
+                            </h3>
+                            
+                            @foreach($category->faqs as $faq)
+                                <div class="faq-item">
+                                    <div class="faq-question">
+                                        <h4>{{ $faq->question }}</h4>
+                                    </div>
+                                    <div class="faq-answer">
+                                        <p>{{ $faq->answer }}</p>
+                                    </div>
+                                    <div class="faq-meta">
+                                        <span class="faq-author">
+                                            <strong>Toegevoegd door:</strong> {{ $faq->user->name ?? 'Onbekend' }}
+                                        </span>
+                                        <span class="faq-date">
+                                            <strong>Op:</strong> {{ $faq->created_at->format('d M Y, H:i') }}
+                                        </span>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                @endforeach
+            </div>
+
+            <!-- Individual Category Sections -->
+            @foreach($categories as $category)
+                <div id="category-{{ $category->id }}" class="category-section" style="display: none;">
+                    <h2>{{ $category->name }}</h2>
+                    
+                    @if($category->description)
+                        <p class="category-description">{{ $category->description }}</p>
+                    @endif
+                    
+                    @if($category->faqs->count() > 0)
+                        @foreach($category->faqs as $faq)
+                            <div class="faq-item">
+                                <div class="faq-question">
+                                    <h4>{{ $faq->question }}</h4>
+                                </div>
+                                <div class="faq-answer">
+                                    <p>{{ $faq->answer }}</p>
+                                </div>
+                                <div class="faq-meta">
+                                    <span class="faq-author">
+                                        <strong>Toegevoegd door:</strong> {{ $faq->user->name ?? 'Onbekend' }}
+                                    </span>
+                                    <span class="faq-date">
+                                        <strong>Op:</strong> {{ $faq->created_at->format('d M Y, H:i') }}
+                                    </span>
+                                </div>
+                            </div>
+                        @endforeach
+                    @else
+                        <div class="no-faqs">
+                            <p>Er zijn nog geen vragen in deze categorie.</p>
+                        </div>
+                    @endif
+                </div>
+            @endforeach
+        </div>
+    </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryLinks = document.querySelectorAll('.category-link');
+    const categorySections = document.querySelectorAll('.category-section');
+    
+    categoryLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            // Remove active class from all links
+            categoryLinks.forEach(l => l.classList.remove('active'));
+            
+            // Add active class to clicked link
+            this.classList.add('active');
+            
+            // Hide all sections
+            categorySections.forEach(section => {
+                section.style.display = 'none';
+                section.classList.remove('active');
+            });
+            
+            // Show selected section
+            const categoryId = this.getAttribute('data-category');
+            const targetSection = categoryId === 'all' 
+                ? document.getElementById('all-faqs')
+                : document.getElementById('category-' + categoryId);
+                
+            if (targetSection) {
+                targetSection.style.display = 'block';
+                targetSection.classList.add('active');
+            }
+        });
+    });
+});
+</script>
 @endsection
