@@ -63,6 +63,7 @@ Route::get('news', [NewsController::class, 'index'])->name('news.index');
 Route::get('contact', [ContactController::class, 'index'])->name('contact.index');
 Route::post('contact', [ContactController::class, 'store'])->name('contact.store');
 
+    Route::get('user/news', [NewsController::class, 'index'])->name('news.index');
 
 
 // routes/web.php
@@ -85,7 +86,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/faqs/{faq}/edit', [FAQController::class, 'edit'])->name('user.faqs.edit'); // Bewerken FAQ
     Route::put('/user/faqs/{faq}', [FAQController::class, 'update'])->name('user.faqs.update'); // Bijwerken FAQ
     Route::delete('/user/faqs/{faq}', [FAQController::class, 'destroy'])->name('user.faqs.destroy'); // Verwijderen FAQ
-    Route::get('user/news', [NewsController::class, 'index'])->name('news.index');
 });
 
     Route::middleware(['auth', 'user'])->group(function () {
