@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ServiceSeeder::class,
             BarberSeeder::class,
+            NewsSeeder::class,
             BookingSeeder::class,
             FAQSeeder::class,
             // Voeg hier eventueel andere seeders toe
