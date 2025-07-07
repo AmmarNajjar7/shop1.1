@@ -124,7 +124,7 @@ Visit: [http://localhost:8000](http://localhost:8000)
 
 ### Claude.ai Discussion
 
-- 🤖 AI Brainstorm: [claude.ai/share/0d128d73-d48b-4899-9f44-0e74b53e978d](https://claude.ai/share/0d128d73-d48b-4899-9f44-0e74b53e978d)
+- 🤖 AI : [claude.ai/share/0d128d73-d48b-4899-9f44-0e74b53e978d](https://claude.ai/share/0d128d73-d48b-4899-9f44-0e74b53e978d)
 
 ### 🎥 Laravel Tutorials
 
