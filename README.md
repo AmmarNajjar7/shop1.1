@@ -139,10 +139,3 @@ Visit: [http://localhost:8000](http://localhost:8000)
 
 ---
 
-## 👨‍💻 Author
-
-**Ammar Najjar**  
-Laravel Developer | Erasmus High School  
-*Proudly built with 💻 and ☕*
-
----
