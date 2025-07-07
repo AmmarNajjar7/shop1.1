@@ -128,10 +128,10 @@ Visit: [http://localhost:8000](http://localhost:8000)
 
 ### 🎥 Laravel Tutorials
 
-1. Laravel Booking App Tutorial - Part 1  
+1. Laravel PHP Framework Tutorial - Full Course for Beginners (2019)  
    [📺 Watch on YouTube](https://www.youtube.com/watch?v=XAwQUUr1obM)
 
-2. Laravel Booking App Tutorial - Part 2  
+2. Laravel 11 Tutorial for Beginners - Laravel Crash Course (2024)  
    [📺 Watch on YouTube](https://www.youtube.com/watch?v=AB8CvQgcMe8)
 
 3. Full Laravel Beginner Course (starts at timestamp)  
